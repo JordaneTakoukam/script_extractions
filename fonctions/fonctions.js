@@ -100,6 +100,27 @@ async function fonctionRetry(
 }
 
 
+function getLastPosition() {
+    const indexPath = './fichiers/index_save.txt';
+
+    try {
+        const content = fs.readFileSync(indexPath, 'utf-8');
+        const lastPositionSave = parseInt(content);
+        return lastPositionSave;
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            // Le fichier n'existe pas, créer le fichier avec une valeur par défaut de 0
+            fs.writeFileSync(indexPath, '1', 'utf-8');
+            return 1;
+        } else {
+            // Le fichier existe mais est vide, ajouter 0 à l'intérieur
+            fs.writeFileSync(indexPath, '1', 'utf-8');
+            return 1;
+        }
+    }
+}
+
+
 async function sauvegardeDataToJson(listJson, index, totalSurLaPage) {
     const savePath = './fichiers/data_save.json';
     const indexPath = './fichiers/index_save.txt';
@@ -123,7 +144,7 @@ async function sauvegardeDataToJson(listJson, index, totalSurLaPage) {
     fs.writeFileSync(savePath, dataToSave);
 
     // Sauvegarder l'index dans un fichier texte
-    fs.appendFileSync(indexPath, `${index}\n`);
+    fs.writeFileSync(indexPath, `${index}`);
 
     console.log('📁 Save pour index = ' + index + ', Qte = ' + listJson.length + ' / ' + totalSurLaPage);
 }
@@ -275,5 +296,6 @@ module.exports = {
     sauvegardeTest,
     tailleFichierJson,
     convertJsonToCsv,
-    purjeJson
+    purjeJson,
+    getLastPosition
 };

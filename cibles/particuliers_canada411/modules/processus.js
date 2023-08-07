@@ -1,7 +1,9 @@
 const { listeDeNom, listeDeVilles } = require('../../../fichiers/data');
-const { randomInt, fonctionRetry, sauvegardeDataToJson, waitForTimeout, sauvegardeTest } = require('./../../../fonctions/fonctions');
+const { randomInt, fonctionRetry, sauvegardeDataToJson, waitForTimeout, sauvegardeTest, getLastPosition } = require('./../../../fonctions/fonctions');
+const fs = require('fs');
 
 async function processusParticulierCanada411({ page, selecteur }) {
+
     var totalResultatPage = null;
     var initalVille = null;
     var initialName = null;
@@ -9,8 +11,8 @@ async function processusParticulierCanada411({ page, selecteur }) {
     var qteDefini = 100;
     var listPremierResult = [];
 
-    var initialIndex = 423;
-    var index = 424;
+    var initialIndex = 1;
+    var index = initialIndex + 1;
 
     await fonctionRetry(page, {
         nombreEssais: 1,
@@ -187,7 +189,7 @@ async function processusParticulierCanada411({ page, selecteur }) {
     if (listeDeNom.length > 1) {
 
         //  boucle pour parcourir les elements 1 a 1 , partant du 2ie elem de la liste
-        while (index < listeDeNom.length) {
+        while (index <= listeDeNom.length) {
             console.log("\n👇 index : " + index + ' / ' + listeDeNom.length);
 
             let listSecondResult = [];
